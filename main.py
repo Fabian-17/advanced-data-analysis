@@ -1,9 +1,14 @@
-import MySQLdb as mysql
+import mysql.connector as mysql
 import csv
 
 # Conexión a la base de datos
 try:
-    db = mysql.connect('localhost', 'root', '', 'CompanyData')
+    db = mysql.connect(
+        host='localhost',
+        user='root',
+        password='',
+        database='CompanyData'
+    )
 except mysql.Error as e:
     print(f"Error al conectar a MySQL: {e}")
     exit(1)
@@ -15,12 +20,12 @@ try:
     # Crear la tabla 'EmployeePerformance'
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS EmployeePerformance (
-                id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                employee_id INT(11), 
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                employee_id INT, 
                 department VARCHAR(255),
-                performance_score FLOAT, 
-                years_with_company INT(11),
-                salary FLOAT
+                performance_score DECIMAL(10, 2),
+                years_with_company INT,
+                salary DECIMAL(10, 2)
         )
     """)
     print("Tabla 'EmployeePerformance' creada.")
@@ -51,4 +56,5 @@ except mysql.Error as e:
     print(f"Error al procesar el archivo CSV: {e}")
 finally:
     # Cerrar la conexión
+    cursor.close()
     db.close()
